@@ -1,5 +1,6 @@
 package com.jcg.java.restServices;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -11,6 +12,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONObject;
+
 import com.google.gson.Gson;
 import com.jcg.java.config.MyDb;
 import com.jcg.java.model.Hotel;
@@ -19,6 +25,7 @@ import com.jcg.java.model.User;
 @Path("/BookAndGo")
 public class MainController {
     MyDb db=new MyDb();
+    ObjectMapper mapper = new ObjectMapper();
 	//Request for login
     @GET
 	@Path("/Login/{param}/{params}")
@@ -53,7 +60,13 @@ public class MainController {
 		  @POST
 			@Path("/AddRegisterDetails")
 			@Consumes(MediaType.APPLICATION_JSON)
-			  	public Response postRegisterDetails(User user){
+		  @Produces(MediaType.TEXT_PLAIN)
+			  	public Response postRegisterDetails(String userDetails) throws JsonParseException, JsonMappingException, IOException{
+			  
+			  
+			  JSONObject requestedJSON = new JSONObject(userDetails);
+			  User  user = mapper.readValue(requestedJSON.toString(), User.class);
+					
 				
 				String dbresult=db.saveUsersDetails(user);
 				  if(dbresult.equalsIgnoreCase("Added")) { return

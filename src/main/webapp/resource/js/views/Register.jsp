@@ -61,7 +61,7 @@
       
       <div class="form-group">
        <label>Re-enter password:</label>
-       <input type="password" name="repeat-password" required ng-model="registerData.password" class="form-control" />
+       <input type="password" name="repeat-password" required class="form-control" />
       </div>
       
       

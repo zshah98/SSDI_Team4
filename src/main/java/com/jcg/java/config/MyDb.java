@@ -56,7 +56,7 @@ public class MyDb {
 				rsObj = stmtObj.executeQuery(sql);
 				
 		        if(rsObj.next()){
-		        	correctpwd=rsObj.getString("users_password");
+		        correctpwd=rsObj.getString("users_password");
 					
 				}
 		        
@@ -114,17 +114,26 @@ while(rsObj.next()) {
 	public String saveUsersDetails(User user) {
 		String response="Db error"; try {
 			 
-			  String sql ="INSERT INTO Users " + "VALUES (?,?,?, ?, ?,?)";
-			  java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
-			  ps.setInt(1,23); 
+			  String sql ="INSERT INTO users ("+"users_id,"+"users_nameFirst,"+"users_nameLast"+",users_email"+",users_type"+",users_password) VALUES (?,?,?, ?,null,?)";
+			 java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
+			 int userid=randomNumberGen();
+			  ps.setInt(1,userid); 
 			  ps.setString(2,user.users_nameFirst); 
-			  ps.setString(2,user.users_nameLast); 
-			  ps.setString(2,user.users_email); 
-			  ps.setString(2,user.users_type);
-			  ps.setString(2,user.users_password); 
+			  ps.setString(3,user.users_nameLast);
+			  ps.setString(4,user.users_email); 
+			  //ps.setString(5,user.users_type);
+			  ps.setString(5,user.users_password); 
+			  if(ps.executeUpdate()!=0) {
+				  response="Added"; 
+			  }
 		}
 		catch (SQLException sqlExObj) { sqlExObj.printStackTrace(); } finally {
-			  disconnectDb(); return response; }
+			   return response; }
+	
 	}
-	}
-	 
+	
+	 public int randomNumberGen() {
+		 int userid=(int) ((Math.random() * ((10000 - 23) + 1)) + 23);
+		 return userid;
+	 }
+}

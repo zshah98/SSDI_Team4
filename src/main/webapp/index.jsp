@@ -46,6 +46,7 @@ redirectTo: '/login'
 //Registration controller
 app.controller("registerController",function($location,$scope,$http){
 	$scope.register_form=true;
+	debugger
 	$scope.message={
 			
 	
@@ -70,10 +71,11 @@ app.controller("registerController",function($location,$scope,$http){
 		 
 	 }
 	  
-	       $http.post('http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/AddRegisterDetails', 
+	       $http.post('http://localhost:8080/BnG/rest/BookAndGo/AddRegisterDetails', 
 	       	JSON.stringify($scope.registerData)).then(function (response) {
-	       	if(response.data=="Added"){
-	       alert('Hotel Details saved successfully.');
+	       	if(response.data=="Details Added"){
+	       alert('Registration Details saved successfully.');
+	       $location.path('\login');
 				}else{
 					alert('Error occured.');
 
@@ -147,7 +149,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
 		 
 		var userId=$scope.loginData.email;
 		var password=$scope.loginData.password;
-		$http.get("http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/Login/"+userId+"/"+password).then(
+		$http.get("http://localhost:8080/BnG/rest/BookAndGo/Login/"+userId+"/"+password).then(
 			      function successCallback(response) {
 			    	$scope.response = response;
 			    	alert($scope.response.data);
@@ -203,7 +205,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
 		$scope.onSearch= function(){
 			//Search by name
 			var searchBy=$scope.searchString;
-			$http.get("http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/Search/"+searchBy).then(
+			$http.get("http://localhost:8080/BnG/rest/BookAndGo/Search/"+searchBy).then(
 					function successCallback(response){
 						debugger
 						$scope.response = response;
