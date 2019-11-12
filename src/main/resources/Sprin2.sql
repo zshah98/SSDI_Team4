@@ -49,3 +49,10 @@ payment_id int(25) PRIMARY KEY,
 payment_date DATETIME
 
 );
+ALTER TABLE hotel
+ADD COLUMN room_type VARCHAR(45) AFTER room_id;
+INSERT INTO hotel 
+VALUES
+( 'Marriot', 2008, '2834', '0006','01,02,03','Kings Size,Double Bed'),
+( 'Days Inn', 2007, '9519', '0001','04,05,06','Deluxe Suite'),
+('Park Hayat', 20013, '1232', '0007','07,08,09','Double bed,Twin bed')

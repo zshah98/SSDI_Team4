@@ -108,7 +108,7 @@ ul li p{
      
 		<div class="bar">
 			<!-- Create a binding between the searchString model and the text field -->
-			<input type="text" ng-model="searchString" placeholder="Enter your search terms" />
+			<input type="text" ng-model="searchString" placeholder="Enter name or location or event interested." />
 			</div>
 		<input type="button" name="search_button" class="btn btn-primary btn-link" ng-click="onSearch()" value="Search" />
 
@@ -118,7 +118,7 @@ ul li p{
 				 searchString model as an argument.
 			 -->
 			  <li ng-repeat="i in items">
-				<a href="{{i.url}}"><img ng-src="{{i.image}}" /></a>
+				<img ng-src="{{i.image}}" /></a>
 				<p>{{i.hotel_name}}<br>{{i.hotel_address}}</p>
 				<p>{{roomavailable}}<br><a href="#/roomPage">{{i.room_type}}</a><br>{{i.event_name}}<br>{{i.event_times}}</p>
 			</li> 

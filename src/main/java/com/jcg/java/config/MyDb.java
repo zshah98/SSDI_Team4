@@ -28,7 +28,7 @@ public class MyDb {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connObj = DriverManager.getConnection(jdbcUrl,userName,password);			
-		} catch (Exception exObj) {
+ 	} catch (Exception exObj) {
 			exObj.printStackTrace();
 		}
 		return connObj;
@@ -82,12 +82,12 @@ public class MyDb {
 	public List<Hotel> getSearchDetails(String searchString) {
 		Hotel hotel = null;
 		List<Hotel> eList = new ArrayList<Hotel>();
-		String sql ="SELECT * FROM (SELECT * FROM hotel) t1 LEFT OUTER JOIN (SELECT * FROM event) t2 ON t1.event_id = t2.event_id WHERE t1.hotel_name='"+searchString + "'OR t2.event_name='"+searchString+"'OR t1.hotel_address='"+searchString+"'" ;
+ 	String sql ="SELECT * FROM (SELECT * FROM hotel) t1 LEFT OUTER JOIN (SELECT * FROM event) t2 ON t1.event_id = t2.event_id WHERE t1.hotel_name='"+searchString + "'OR t2.event_name='"+searchString+"'OR t1.hotel_address='"+searchString+"'" ;
        	try{stmtObj = connectDb().prepareStatement(sql);
 		rsObj = stmtObj.executeQuery(sql);
 		//Getting the hotel details from search 
 while(rsObj.next()) {
-	hotel = new Hotel(rsObj.getInt("hotel_id"), rsObj.getString("hotel_name"), rsObj.getString("hotel_address"),rsObj.getInt("Room_id"));
+	hotel = new Hotel(rsObj.getInt("hotel_id"), rsObj.getString("hotel_name"), rsObj.getString("hotel_address"),rsObj.getInt("Room_id"),rsObj.getString("Room_type"));
 	      if(rsObj.getString("event_id")!=null)
 	      { hotel.setEvent_name(rsObj.getString("event_name"));
 	        hotel.setEvent_id(rsObj.getString("event_id"));

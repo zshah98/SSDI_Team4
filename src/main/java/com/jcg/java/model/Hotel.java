@@ -30,6 +30,16 @@ public class Hotel {
       public String hotel_contact;
       public String Event_id;
       public String room_id;
+      public String room_type;
+	public String getRoom_type() {
+		return room_type;
+	}
+	public void setRoom_type(String room_type) {
+		this.room_type = room_type;
+	}
+	public void setRoom_id(String room_id) {
+		this.room_id = room_id;
+	}
 	public Hotel() {
 		
 	}
@@ -39,12 +49,13 @@ public class Hotel {
 	public void setEvent_id(String event_id) {
 		Event_id = event_id;
 	}
-	public Hotel(int hotel_id, String hotel_name, String hotel_address, int room_id) {
+	public Hotel(int hotel_id, String hotel_name, String hotel_address, int room_id,String room_type) {
 		super();
 		this.hotel_id = hotel_id;
 		this.hotel_name = hotel_name;
 		this.hotel_address = hotel_address;
 		room_id = room_id;
+		this.room_type=room_type;
 	}
 	public String getRoom_id() {
 		return room_id;

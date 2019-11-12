@@ -1,10 +1,12 @@
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
@@ -19,7 +21,7 @@ public class MainControllerTest extends JerseyTest{
 	//Whether get request is executing properly
 	@Override
     protected Application configure() {
-        return new ResourceConfig(MainController.class);
+       return new ResourceConfig(MainController.class);
     }
 	
 	
@@ -45,4 +47,36 @@ public class MainControllerTest extends JerseyTest{
 	    // Then
 	    assertEquals(response.getStatus(),404); 
 	}
+	@Test
+	public void searchValidString() {
+		 String name = "Hilton";
+		  //Dummy value for testing search
+		    Response response = target("BookAndGo/Search/"+name).request()
+		            .get();
+	      
+		    // Then
+		    assertEquals(response.getStatus(),200); 
+		
+	}
+	@Test
+	public void searchInValidString() {
+		 String name = "xyz";
+		  //Dummy value for testing search
+		    Response response = target("BookAndGo/Search/"+name).request()
+		            .get();
+	      
+		    // Then
+		    assertEquals(response.getStatus(),200); 
+		
+	}
+	/*
+	 * @Test public void RegisterDetails() { Response response =
+	 * target("BookAndGo/AddRegisterDetails").request() .post(Entity.text(
+	 * "{\"users_id\":\"\",\"users_nameFirst\":\"dss\",\"users_nameLast\":\"ds\",\"users_password\":\"1234\",\"users_email\":\"dsqd@g.com}"
+	 * ));
+	 * 
+	 * assertEquals(response.getStatus(),200);
+	 * 
+	 * }
+	 */
 }

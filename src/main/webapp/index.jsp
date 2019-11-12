@@ -39,7 +39,7 @@ when('/Register', {
     		controller: 'payment_controller'
     		}).
       otherwise({
-redirectTo: '/login'
+redirectTo: '/homepage'
 });
 }
 ]);
@@ -174,7 +174,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
         debugger
 		$scope.items = [
 			{
-				url: 'http://tutorialzine.com/2013/07/50-must-have-plugins-for-extending-twitter-bootstrap/',
+				
 				hotel_name: 'Marriot Hotel',
 				image:'resource/js/images/marriot.png',
 				hotel_address:'2832 Charlotte,NC',
@@ -183,7 +183,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
 				room_type:'Kings Bed'
 			},
 			{
-				url: 'http://tutorialzine.com/2013/08/simple-registration-system-php-mysql/',
+				
 				hotel_name:'Hilton',
 				image:'resource/js/images/marriot.png',
 				hotel_address:'2832 Charlotte,NC',
@@ -192,7 +192,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
 					room_type:'Deluxe'
 			},
 			{
-				url: 'http://tutorialzine.com/2013/08/simple-registration-system-php-mysql/',
+				
 				hotel_name:'West in',
 				image:'resource/js/images/marriot.png',
 				hotel_address:'2832 Charlotte,NC',
