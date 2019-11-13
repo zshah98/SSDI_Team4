@@ -115,7 +115,7 @@ while(rsObj.next()) {
 		String response="Db error"; try {
 			 
 			  String sql ="INSERT INTO users ("+"users_id,"+"users_nameFirst,"+"users_nameLast"+",users_email"+",users_type"+",users_password) VALUES (?,?,?, ?,null,?)";
-			 java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
+		 java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
 			 int userid=randomNumberGen();
 			  ps.setInt(1,userid); 
 			  ps.setString(2,user.users_nameFirst); 

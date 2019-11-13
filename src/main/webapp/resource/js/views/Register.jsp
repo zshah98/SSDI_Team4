@@ -32,7 +32,7 @@
      
       <div class="form-group">
        <label>Username:</label>
-       <input type="text" name="username" required ng-model="registerData.username" class="form-control" ng-minlength="4" ng-maxlength="10"/>
+       <input type="text" name="username" required  class="form-control" ng-minlength="4" ng-maxlength="10"/>
         <p  ng-show="userForm.username.$error.minlength" class="help-block">Username must be at least 4 characters.</p>
   		<p ng-show="userForm.username.$error.maxlength" class="help-block">Username must be at most 10 characters.</p>
       </div>

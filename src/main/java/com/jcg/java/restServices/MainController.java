@@ -64,7 +64,7 @@ public class MainController {
 			  	public Response postRegisterDetails(String userDetails) throws JsonParseException, JsonMappingException, IOException{
 			  
 			  
-		  JSONObject requestedJSON = new JSONObject(userDetails);
+	  JSONObject requestedJSON = new JSONObject(userDetails);
 			  User  user = mapper.readValue(requestedJSON.toString(), User.class);
 					
 				
