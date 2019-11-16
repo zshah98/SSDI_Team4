@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
- <title>BookAndGo</title>
+ 
       
       <!-- Javascript Files -->      
       <script type="text/javascript" src="resource/js/angular_v1.6.0.js"></script>	    	   

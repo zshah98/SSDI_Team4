@@ -4,7 +4,6 @@
 <html>
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>BookAndGo</title>
       
       <!-- Javascript Files -->      
       <script type="text/javascript" src="resource/js/angular_v1.6.0.js"></script>	    	   
@@ -15,7 +14,7 @@
       
      </head>
     <body style="background-color:grey;">
-      <h2 align="center" class="text-primary">Book And Go</h2>
+      
       <div class="container form_style">
       
 <div class="panel panel-default" ng-show="show_images">

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="resource/js/css/Index.css">
 
-
-<title>AngularJS Routing with Multiple Views Example</title>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
 
@@ -46,7 +45,6 @@ redirectTo: '/homepage'
 //Registration controller
 app.controller("registerController",function($location,$scope,$http){
 	$scope.register_form=true;
-	debugger
 	$scope.message={
 			
 	
@@ -60,10 +58,7 @@ app.controller("registerController",function($location,$scope,$http){
 	};
 	 $scope.registerData = angular.copy($scope.message);
 	 $scope.registerEntry = function(){
-		 
-			debugger
-			
-			var onSuccess = function (data, status, headers, config) {
+		 		var onSuccess = function (data, status, headers, config) {
 	            alert('Registered successfully.');
 	        };
 	        var onError = function (data, status, headers, config) {
@@ -247,11 +242,22 @@ app.controller('login_register_controller', function($location,$scope, $http){
 </script>
 </head>
 <body ng-app="myApp" >
-<h2 style=" color:cornflowerblue; font-family:arial; font-size:260%">Book And Go</h2>
+<body>
+
+<div class="header">
+  <a href="#default" class="logo">Book And Go</a>
+  <div class="header-right">
+    <a class="active" href="#home">Home</a>
+    <a href="#contact">Contact</a>
+    <a href="#about">About</a>
+  </div>
+</div>
+
+<div style="padding-left:20px">
+ </div>
 <div>
 <ul>
 <li>
-<a href="#/login" style="text-decoration:none; color:black; border:3px solid; left:1000px">Login</a>
 </li>
 </ul>
 <div ng-view></div>
