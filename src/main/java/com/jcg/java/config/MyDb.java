@@ -131,6 +131,21 @@ while(rsObj.next()) {
 			   return response; }
 	
 	}
+	//To delete a particular user from the database
+	public String deleteUsers(String userId) {
+		String response=" Not Deleted";
+		try{String sql="Delete from users where users_id="+userId;
+		stmtObj = connectDb().prepareStatement(sql);
+		if(stmtObj.executeUpdate(sql)==0) {
+			response="Deleted";
+		}
+		}
+		
+		catch(SQLException sqlExObj) {
+			sqlExObj.printStackTrace();
+		}
+		return response;
+	}
 	
 	 public int randomNumberGen() {
 		 int userid=(int) ((Math.random() * ((10000 - 23) + 1)) + 23);
