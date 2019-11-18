@@ -37,6 +37,10 @@ when('/Register', {
     		templateUrl: 'resource/js/views/PaymentDetails.jsp',
     		controller: 'payment_controller'
     		}).
+    		when('/Cancellation', {
+        		templateUrl: 'resource/js/views/Cancellation.jsp',
+        		controller: 'cancellation_controller'
+        		}).
       otherwise({
 redirectTo: '/homepage'
 });
@@ -66,7 +70,7 @@ app.controller("registerController",function($location,$scope,$http){
 		 
 	 }
 	  
-	       $http.post('http://localhost:8080/BnG/rest/BookAndGo/AddRegisterDetails', 
+	       $http.post('http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/AddRegisterDetails', 
 	       	JSON.stringify($scope.registerData)).then(function (response) {
 	       	if(response.data=="Details Added"){
 	       alert('Registration Details saved successfully.');
@@ -144,7 +148,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
 		 
 		var userId=$scope.loginData.email;
 		var password=$scope.loginData.password;
-		$http.get("http://localhost:8080/BnG/rest/BookAndGo/Login/"+userId+"/"+password).then(
+		$http.get("http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/Login/"+userId+"/"+password).then(
 			      function successCallback(response) {
 			    	$scope.response = response;
 			    	alert($scope.response.data);
@@ -200,7 +204,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
 		$scope.onSearch= function(){
 			//Search by name
 			var searchBy=$scope.searchString;
-			$http.get("http://localhost:8080/BnG/rest/BookAndGo/Search/"+searchBy).then(
+			$http.get("http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/Search/"+searchBy).then(
 					function successCallback(response){
 						debugger
 						$scope.response = response;
@@ -239,6 +243,50 @@ app.controller('login_register_controller', function($location,$scope, $http){
 	 };
 });
 	
+
+	//Cancellation controller
+	app.controller('cancellation_controller', function($location,$scope, $http){
+		
+		 $scope.closeMsg = function(){
+		  $scope.alertMsg = false;
+		 };
+
+		 $scope.login_form = false;
+		 $scope.cancel_form=true;
+
+		
+		 $scope.showCancel = function(){
+		  $scope.register_form = false;
+		  $scope.login_form = false;
+		  $scope.cancel_form=true;
+		  $scope.alertMsg = false;
+		   };
+		 
+		 $scope.showLogin= function(){
+			 
+		      
+		 };
+		 $scope.submitCancel= function(){
+			 
+			var bookId=$scope.cancelData.bookid;
+			
+			$http.get("http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/Cancellation/"+bookId).then(
+				      function successCallback(response) {
+				    	$scope.response = response;
+				    	alert($scope.response.data);
+				    	console.log("Booking deleted for ID: " +bookId);
+				      },
+				      function errorCallback(response) {
+				    	 
+				    	  $scope.response = response;
+				    	  alert($scope.response.data);
+				        console.log("Unable to perform get request");
+				      }
+				    );
+		 };
+		});	
+	
+	
 </script>
 </head>
 <body ng-app="myApp" >
@@ -250,6 +298,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
     <a class="active" href="#home">Home</a>
     <a href="#contact">Contact</a>
     <a href="#about">About</a>
+    <a href ="#Cancellation">Cancel</a>
   </div>
 </div>
 
