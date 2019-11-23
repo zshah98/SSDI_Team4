@@ -1,82 +1,83 @@
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.ws.rs.client.Entity;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.jcg.java.config.MyDb;
+import com.jcg.java.model.User;
 import com.jcg.java.restServices.MainController;
-
-
+//import com.mysql.jdbc.Connection;
 
 public class MainControllerTest extends JerseyTest{
-//We are testing for MainController Class
-	//We have two get services to check.
-	//1 we need to check what happens if no parameters.
-	//Whether get request is executing properly
+
 	@Override
     protected Application configure() {
-       return new ResourceConfig(MainController.class);
+       return new ResourceConfig(MainControllerTest.class);
     }
-	
+	//Here MainController depends on MyDb class
+	@InjectMocks private MyDb mydb;
+	@Mock private Connection con;
+	 @Mock	private Statement st;
+	 @Mock	private ResultSet rs;
+	MainController mcontroller=new MainController();
+	@Before
+	  public void setUp() {
+	    MockitoAnnotations.initMocks(this);
+	    
+	  }
 	
 	@Test
-    public void testGetLoginDetails() {
-		// Given
-	    String name = "ssmith@gmail.com";
-	    String pass="1234";//Dummy value for testing username and password
-	    Response response = target("BookAndGo/Login/"+name+"/"+pass).request()
-	            .get();
-      
-	    // Then
-	    assertEquals(response.getStatus(),200); 
+	public void testLoginService() {
+		Response res=mcontroller.getLoginResponse("ssmith@gmail.com","1234");
+		assertEquals(res.getStatus(),200);
 	}
 	@Test
-    public void testWrongGetLoginDetails() {
-		// Given
-	    String name = "ssmith@gmail.com";
-	    String pass="xyz";//Dummy value for testing username and password
-	    Response response = target("BookAndGo/Login/"+name+"/"+pass).request()
-	            .get();
-      
-	    // Then
-	    assertEquals(response.getStatus(),404); 
+	public void testSearchService() {
+		Response res=mcontroller.getSearchResponse("Hilton");
+		assertEquals(res.getStatus(),200);
 	}
 	@Test
-	public void searchValidString() {
-		 String name = "Hilton";
-		  //Dummy value for testing search
-		    Response response = target("BookAndGo/Search/"+name).request()
-		            .get();
-	      
-		    // Then
-		    assertEquals(response.getStatus(),200); 
+	public void testRegisterService() throws JsonParseException, JsonMappingException, IOException {
+		Response res=mcontroller.postRegisterDetails("{\"users_id\":\"\",\"users_nameFirst\":\"arikasai\",\"users_nameLast\":\"zarna\",\"users_password\":\"123\",\"users_email\":\"harikapaluri@gmail.com\"}");
+		assertEquals(res.getStatus(),200); //Checking for insertion.
+		//Trying to delete what we inserted
+				String responseDeleted=" Not Deleted";
+				 con=(Connection) MyDb.connectDb();
+			       
+				try{String sql="Delete from users where users_nameFirst='aarikasai'";
+				st=con.createStatement();
+				
+				if(st.executeUpdate(sql)==0) {
+					responseDeleted="Deleted";
+				}
+				}
+				
+				catch(SQLException sqlExObj) {
+					sqlExObj.printStackTrace();
+				}
+				assertEquals("Deleted",responseDeleted);
 		
 	}
 	@Test
-	public void searchInValidString() {
-		 String name = "xyz";
-		  //Dummy value for testing search
-		    Response response = target("BookAndGo/Search/"+name).request()
-		            .get();
-	      
-		    // Then
-		    assertEquals(response.getStatus(),200); 
-		
+	public void testCancelService() {
+		Response res=mcontroller.getCancelResponse("C15");
+		assertEquals(res.getStatus(),200);
 	}
-	/*
-	 * @Test public void RegisterDetails() { Response response =
-	 * target("BookAndGo/AddRegisterDetails").request() .post(Entity.text(
-	 * "{\"users_id\":\"\",\"users_nameFirst\":\"dss\",\"users_nameLast\":\"ds\",\"users_password\":\"1234\",\"users_email\":\"dsqd@g.com}"
-	 * ));
-	 * 
-	 * assertEquals(response.getStatus(),200);
-	 * 
-	 * }
-	 */
 }
