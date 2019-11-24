@@ -98,15 +98,17 @@ ul li p{
 </style>	
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular.min.js"></script>
+<scipt src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js">
+<script type="text/javascript" src="resource/js/controller/form.js"></script>
 	
 	<!-- Initialize a new AngularJS app and associate it with a module named "instantSearch"-->
 	<script type="text/javascript">
 
 		
 		</script>
-	<body  ng-app="myApp" ng-controller="instantSearchController">
-     
-		<div class="bar">
+	<body  ng-app="myApp" ng-controller="SearchController">
+     		<div class="bar">
 			<!-- Create a binding between the searchString model and the text field -->
 			<input type="text" ng-model="searchString" placeholder="Enter name or location or event interested." />
 			</div>
@@ -120,9 +122,10 @@ ul li p{
 			  <li ng-repeat="i in items">
 				<img ng-src="{{i.image}}" /></a>
 				<p>{{i.hotel_name}}<br>{{i.hotel_address}}</p>
-				<p>{{roomavailable}}<br><a href="#/roomPage">{{i.room_type}}</a><br>{{i.event_name}}<br>{{i.event_times}}</p>
+				<p>{{roomavailable}}<br><a ng-href="#/roomPage/{{i.hotel_name}}/{{i.room_type}}" ng-click="roomData(i.hotel_name, i.hotel_address)">{{i.room_type}}</a><br>{{i.event_name}}<br>{{i.event_times}}</p>
 			</li> 
 		</ul>
+		
 
 		<!-- Include AngularJS from Google's CDN -->
 		

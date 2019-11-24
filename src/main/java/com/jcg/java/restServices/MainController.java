@@ -19,7 +19,10 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.jcg.java.config.MyDb;
+import com.jcg.java.model.BillingDetails;
 import com.jcg.java.model.Hotel;
+import com.jcg.java.model.PaymentDetails;
+import com.jcg.java.model.Room;
 import com.jcg.java.model.User;
 
 @Path("/BookAndGo")
@@ -74,4 +77,61 @@ public class MainController {
 				  Response.status(404).entity("Db Error").build(); }
 
 			}
+		  
+		  @POST
+		   	@Path("/PaymentDetails")
+		  @Consumes(MediaType.APPLICATION_JSON)
+		   	@Produces(MediaType.TEXT_PLAIN)
+		   	public Response postPaymentDetails(String paymentDetails) throws JsonParseException, JsonMappingException, IOException {
+			  JSONObject requestedJSON = new JSONObject(paymentDetails);
+			  PaymentDetails dumbpay = mapper.readValue(requestedJSON.toString(), PaymentDetails.class);         
+			  
+			  
+			  
+		               //user.setUsers_password(password);
+		   		String dbresult=db.savePaymentDetails(dumbpay);
+		           if(dbresult.equalsIgnoreCase("Added"))
+		   		{return Response.status(200).entity("Payment Details Added").build();}else {
+		   			
+		   			return Response.status(404).entity("Db Error").build();
+		   		}
+		    
+		   	}
+		  
+		  
+		  @POST
+		   	@Path("/BillingDetails")
+		  @Consumes(MediaType.APPLICATION_JSON)
+		   	@Produces(MediaType.TEXT_PLAIN)
+		   	public Response postBillingDetails(String billingDetails) throws JsonParseException, JsonMappingException, IOException {
+			  JSONObject requestedJSON = new JSONObject(billingDetails);
+			  BillingDetails dumbbill = mapper.readValue(requestedJSON.toString(), BillingDetails.class);         
+			  
+			  
+			  
+		               //user.setUsers_password(password);
+		   		String dbresult=db.saveBillingDetails(dumbbill);
+		           if(dbresult.equalsIgnoreCase("Added"))
+		   		{return Response.status(200).entity("Billing Details Added").build();}else {
+		   			
+		   			return Response.status(404).entity("Db Error").build();
+		   		}
+		    
+		   	}
+		  
+		  
+		  @GET
+			@Path("/roomDetails/{param}/{roomT}/{hotelAdd}")
+			@Produces(MediaType.APPLICATION_JSON)
+			public Response getRoomDetailsResponse(@PathParam("param") String hotel_name,@PathParam("roomT") String room_type,@PathParam("hotelAdd") String hotel_address) {
+		           
+				List<Room> response=db.getRoomDetails(hotel_name,room_type,hotel_address);
+				String json = new Gson().toJson(response);
+		        if(response!=null)
+				{return Response.status(200).entity(json).build();}else {
+					
+					return Response.status(404).entity(json).build();
+				}	
+}
+
 }

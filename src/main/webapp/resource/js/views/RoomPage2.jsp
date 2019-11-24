@@ -10,7 +10,7 @@
       <script type="text/javascript" src="resource/js/controller/form.js"></script>    
        <script type="text/javascript" src="resource/js/controller/Room.js"></script> 
       <script type="text/javascript" src="resource/js/angular-route.js"></script>
-        <script src="resource/js/controller/form.js"></script> 
+        <script src="resource/js/controller/Room.js"></script> 
       
      </head>
     <body style="background-color:grey;">
@@ -23,12 +23,13 @@
 
 	<h3 class="panel-title">{{Selected_hotel_name}}</h3>
      <h2 >{{Selected_hotel_address}}</h2>
+   
     <div class="panel-body">
      <form method="post" ng-submit="showBook()">
       <div class="form-group">
       <table border = "1px" align="center">
       	<tr>
-      		<th><img ng-src="resource/js/images/hotel1_room1.jpg" width="300" height="300" ng-model="roomData.roomid1"/><th>
+      		<th><img ng-src="resource/js/images/hotel3_room1.jpg" width="300" height="300" ng-model="roomData.roomid5"/><th>
       		<th>
       		  <td  width ="300" align="center">
       			<b>King size bed</b><br/>
@@ -36,15 +37,16 @@
       			<ul>
       			<li>AC</li>
       			<li>Heater</li>
+      			<li>Fan</li>
       			<li>Bathing stuff</li>
       			</ul>
       			</td>
       		</th>
       		
-      		<th><input type="button" name="room_link1" class="btn btn-primary btn-link" ng-click="doBook()" value="Book" /></th>
+      		<th><input type="button" ng-model="book_selection" name="room_link5" class="btn btn-primary btn-link" ng-click="doBook(book_selection='Kings Bed')" value="Book" /></th>
       	</tr>
       	      	<tr>
-      		<th><img ng-src="resource/js/images/hotel1_room2.jpg" width="300" height="300" ng-model="roomData.roomid2"/><th>
+      		<th><img ng-src="resource/js/images/hotel3_room2.jpg" width="300" height="300" ng-model="roomData.roomid6"/><th>
       		<th>
       		  <td  width ="300" align="center">
       			<b>Double bed</b><br/>
@@ -56,7 +58,23 @@
       			</td>
       		</th>
       		
-      		<th><input type="button" name="room_link2" class="btn btn-primary btn-link" ng-click="doBook()" value="Book" /></th>
+      		<th><input type="button" ng-model="book_selection" name="room_link6" class="btn btn-primary btn-link" ng-click="doBook(book_selection='Double Bed')" value="Book" /></th>
+      		
+      		<th><img ng-src="resource/js/images/hotel3_room3.jpg" width="300" height="300" ng-model="roomData.roomid7"/><th>
+      		<th>
+      		  <td  width ="300" align="center">
+      			<b>Deluxe Suite</b><br/>
+      			Features:
+      			<ul>
+      			<li>AC</li>
+      			<li>Heater</li>
+      			<li>Fan</li>
+      			<li>Bathing stuff</li>
+      			</ul>
+      			</td>
+      		</th>
+      		<th><input type="button" ng-model="book_selection" name="room_link7" class="btn btn-primary btn-link" ng-click="doBook(book_selection='Deluxe Suite')" value="Book" /></th>
+      		
       	</tr>
       	</table>
       </div>

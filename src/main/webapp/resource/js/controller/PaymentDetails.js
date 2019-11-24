@@ -1,27 +1,15 @@
 // app.js
 // create angular app
 
-var validationApp = angular.module('validationApp', []);
+var validationApp = angular.module('app', []);
 
 // create angular controller
 validationApp.controller('payment_controller', function($scope, $http) {
-	$scope.submitForm=function(){		
-   var name=$scope.name;
-		
-		/*$http.get("http://localhost:8080/AngularJsSqlEx/rest/BookAndGo/PaymentDetails/"+name).then(
-			      function successCallback(response) {
-			    	$scope.response = response;
-			    	alert($scope.response.data);
-			    	$location.path('\AddMyhotel');
-			      },
-			      function errorCallback(response) {
-			    	 
-			    	  $scope.response = response;
-			    	  alert($scope.response.data);
-			        console.log("Unable to perform get request");
-			      }
-			    );*/
-
+	
+	$scope.submitForm=function(){	
+		debugger
+	  var name=$scope.name;
+	
   };
   
   it('should check ng-bind', function() {

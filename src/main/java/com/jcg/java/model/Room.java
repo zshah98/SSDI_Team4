@@ -1,18 +1,20 @@
 package com.jcg.java.model;
-
+//Utkarsha
 public class Room {
 	public String Room_id;
 	public int hotel_id;
 	public String room_type;
-	public String room_floor;
+	public int room_floor;
 	public String roomAvailableFlag;
 	public String roomPrice;
 	public int no_of_beds;
 	public Room() {
 
 	}
-	public Room(String room_id, int hotel_id, String room_type, String room_floor, String roomAvailableFlag, int no_of_beds,String roomPrice) {
+	public Room(String room_id, int hotel_id, String room_type, int room_floor, String roomAvailableFlag, int no_of_beds,String roomPrice) {
 		super();
+		
+		
 		Room_id = room_id;
 		this.hotel_id = hotel_id;
 		this.room_type = room_type;
@@ -45,10 +47,10 @@ public class Room {
 	public void setRoom_type(String room_type) {
 		this.room_type = room_type;
 	}
-	public String getRoom_floor() {
+	public int getRoom_floor() {
 		return room_floor;
 	}
-	public void setRoom_floor(String room_floor) {
+	public void setRoom_floor(int room_floor) {
 		this.room_floor = room_floor;
 	}
 	public String getRoomAvailableFlag() {

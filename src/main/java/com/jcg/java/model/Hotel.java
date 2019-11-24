@@ -49,7 +49,7 @@ public class Hotel {
 	public void setEvent_id(String event_id) {
 		Event_id = event_id;
 	}
-	public Hotel(int hotel_id, String hotel_name, String hotel_address, int room_id,String room_type) {
+	public Hotel(int hotel_id, String hotel_name, String hotel_address, String room_id,String room_type) {
 		super();
 		this.hotel_id = hotel_id;
 		this.hotel_name = hotel_name;
