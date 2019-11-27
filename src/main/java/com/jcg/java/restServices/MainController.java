@@ -109,7 +109,7 @@ public class MainController {
 			  
 			  
 			  
-		               //user.setUsers_password(password);
+		               
 		   		String dbresult=db.saveBillingDetails(dumbbill);
 		           if(dbresult.equalsIgnoreCase("Added"))
 		   		{return Response.status(200).entity("Billing Details Added").build();}else {
@@ -133,5 +133,27 @@ public class MainController {
 					return Response.status(404).entity(json).build();
 				}	
 }
+		  @GET
+			@Path("/BookingDetails/{param}/{roomT}")
+		  @Produces(MediaType.TEXT_PLAIN)
+			public Response getBookingDetailsResponse(@PathParam("param") String hotel_id,@PathParam("roomT") String room_id) {
+		         String response=db.getBookingId(hotel_id,room_id);  
+				 if(response!="Db Error")
+				{return Response.status(200).entity(response).build();}else {
+					
+					return Response.status(404).entity(response).build();
+				}	
+		  }
 
+		  @GET
+			@Path("/SetRoomFlag/{param}/{params}")
+		  @Produces(MediaType.TEXT_PLAIN)
+			public Response setRoomFlag(@PathParam("param") String room_id,@PathParam("params") int booking_id) {
+		         String response=db.setRoomFlag(room_id,booking_id);  
+				 if(response=="Not able to Reserve")
+				{return Response.status(404).entity(response).build();}else {
+					
+					return Response.status(200).entity(response).build();
+				}	
+		  }
 }

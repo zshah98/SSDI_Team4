@@ -299,8 +299,20 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 		      $http.post('http://localhost:8080/BnG/rest/BookAndGo/PaymentDetails', 
 		  	       	JSON.stringify($scope.paymentData)).then(function (response) {
 		  	       	if(response.data=="Payment Details Added"){
-		  	       alert('Payment Details saved successfully.');
-		  	       $location.path('\BillingDetails');
+		  	        	       alert('Payment Details saved successfully.');
+		  	             //If payment details are avaible set the room flag as not available.
+		  	        	     var booking_id=localStorage.getItem("Booking_id");
+			  	             var room_id=localStorage.getItem('Selected_Room__id');
+			  	             $http.get("http://localhost:8080/BnG/rest/BookAndGo/SetRoomFlag/"+room_id+"/"+booking_id).then(function(response){
+			  	            //Will let you know in a while.	
+			  	            		if(response.data!="Payment Not Done"){
+			  	            			alert('Payment has been done.This is your payment_id for reference :'+response.data);
+			  	            			$location.path('\homepage')
+			  	            		}else{
+			  	            			alert(response.data);
+			  	            		}
+			  	            	  	             
+			  				});
 		  				}else{
 		  					alert('Error occured.');
 
@@ -417,7 +429,7 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 		  	       $location.path('\PaymentDetails');
 		  				}else{
 		  					alert('Error occured.');
-
+		  					 $location.path('\PaymentDetails');
 		  	        		}
 		  	       	});
 		  }
@@ -425,7 +437,7 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 	
 	
 	app.controller('invoice_controller', function($scope,$location,$http, $locale) {
-		
+		debugger
 		 var room_type=localStorage.getItem("Selected_room_type");
 		 var hotel_name=localStorage.getItem("Selected_hotel_name");
 		 var hotel_address=localStorage.getItem("Selected_hotel_address"); 
@@ -433,24 +445,33 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 		 $scope.hotel_name=hotel_name;
 		  $scope.data = [
 		    {
-		      'room_type' :'23',
-		      'roomPrice' : '33',
+		      'room_type' :'',
+		      'roomPrice' : '',
 		      'room_floor':1,
 		      'room_id':0
 		    }
 		  ]
 		  $http.get("http://localhost:8080/BnG/rest/BookAndGo/roomDetails/"+hotel_name+"/"+room_type+"/"+hotel_address).then(
+				  
 					function successCallback(response){
+						debugger
 						
 						$scope.response = response;
 						$scope.data =$scope.response.data;
+						
 						if($scope.response.data.length==0){
+							alert("Sorry this room type in this hotel is not available.Please try another hotel");
+							$scope.confirmBook=true;
 							$scope.data=[
 								{
-									hotel_name:"Server error.Unable to retrieve details"
+									room_type:"Sorry this room type in this hotel is not available.Please try another hotel."
 								}
 						];
 						          
+						}else{
+							$scope.confirmBook=false;
+							localStorage.setItem("Selected_hotel_id",$scope.data[0].hotel_id);
+							localStorage.setItem("Selected_Room__id",$scope.data[0].Room_id);
 						}
 						
 					},function errorCallback(response){
@@ -465,40 +486,38 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 			
 			);	
 		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  /*  $http.post('http://localhost:8080/BnG/rest/BookAndGo/Invoice', 
-		  	       	JSON.stringify($scope.invoiceData)).then(function (response) {
-		  	       	if(response.data=="Payment Details Added"){
-		  	       alert('Payment Details saved successfully.');
-		  	       $location.path('\homepage');
-		  				}else{
-		  					alert('Error occured.');
-
-		  	        		}
-		  	       	}); */
-		 /*  $scope.invoice = {};
-		  var total = 0;
-		  var discount = 0;
-		  for (var i=0; i < $scope.data.length; i++) {
-		     total = total + $scope.data[i].sale_prize*$scope.data[i].quantity;
-		     discount = discount+$scope.data[i].discount;
+		  //This method is for generating a booking id.
+		  $scope.confirmBooking = function(data,data){
+			  debugger
+			  var room_id=localStorage.getItem('Selected_Room__id');
+			  var hotel_id=localStorage.getItem('Selected_hotel_id');
+			  
+			  $http.get("http://localhost:8080/BnG/rest/BookAndGo/BookingDetails/"+hotel_id+"/"+room_id).then(
+						function successCallback(response){
+							$scope.response = response;
+							var res=$scope.response.data;
+							if($scope.response!="Db Error")
+							{
+							localStorage.setItem("Booking_id",$scope.response.data);
+							alert("Booking ID  generated for reference is :"+res+".Please complete payment for confirmation ");
+							$location.path('\BillingDetails');	
+							}else{
+								alert("Not able to book the room.Please try again later.")
+							}
+							},function errorCallback(response){
+							$scope.response = response;
+							
+						}	
+				
+				
+				
+				);	
 		  }
-		  $scope.invoice['total'] = total;
-		  $scope.invoice['tax'] = (total*2)/100;
-		  $scope.invoice['discount'] = (total*discount)/100;
-
-		  
-		  $scope.showinvoice = function () {
-		    $('#invoice').fadeIn() */
-		  //}
-		});
-	
-	
+		  //Method for going back
+		  $scope.goBack = function(){
+			  $location.path('\homepage');
+		  }
+	});
 </script>
 </head>
 <body ng-app="myApp" >

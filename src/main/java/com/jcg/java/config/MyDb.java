@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.jcg.java.model.BillingDetails;
@@ -158,12 +160,12 @@ while(rsObj.next()) {
 	 }
 	 public String savePaymentDetails(PaymentDetails dumbpay) {
 			String response="Db error"; try {
-				 String sql ="INSERT INTO Payment_details(user_id,user_name,card_no,ccv) VALUES (null,?, ?, ?)";
+				 String sql ="INSERT INTO Payment_details(user_id,user_name,card_no,ccv) VALUES (null,null,?, ?)";
 				 java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
 				 int user_id=randomNumberGen();
-				  ps.setString(1,dumbpay.getUser_name()); 
-				  ps.setDouble(2, dumbpay.getCard_no());
-				  ps.setInt(3, dumbpay.getCcv());
+				 // ps.setString(1,dumbpay.getUser_name()); 
+				  ps.setDouble(1, dumbpay.getCard_no());
+				  ps.setInt(2, dumbpay.getCcv());
 				  if(ps.executeUpdate()!=0) {
 					  response="Added"; 
 				  }
@@ -177,15 +179,16 @@ while(rsObj.next()) {
 		public String saveBillingDetails(BillingDetails dumbbill) {
 			String response="Db error"; try {
 				 
-				  String sql ="INSERT INTO Billing_details VALUES (?,?, ?, ?, ?, ?)";
+				  String sql ="INSERT INTO Billing_details VALUES (null,?, ?, ?, ?, ?)";
 				 java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
-				 int user_id=randomNumberGen();
-				  ps.setInt(1,user_id); 
-				  ps.setString(2,dumbbill.getAdd_line1()); 
-				  ps.setString(3, dumbbill.getAdd_line2());
-				  ps.setString(4, dumbbill.getCity());
-				  ps.setInt(5, dumbbill.getPincode());
-				  ps.setString(6, dumbbill.getState());
+			/*
+			 * int user_id=randomNumberGen(); ps.setInt(1,user_id);
+			 */
+				  ps.setString(1,dumbbill.getAdd_line1()); 
+				  ps.setString(2, dumbbill.getAdd_line2());
+				  ps.setString(3, dumbbill.getCity());
+				  ps.setInt(4, dumbbill.getPincode());
+				  ps.setString(5, dumbbill.getState());
 				  if(ps.executeUpdate()!=0) {
 					  response="Added"; 
 				  }
@@ -226,5 +229,64 @@ while(rsObj.next()) {
 			
 			
 			
+		}
+
+
+
+		public String getBookingId(String hotel_id, String room_id) {
+			// TO generate Booking Id
+			String response="Db error"; try {
+				 String sql ="INSERT INTO book(booking_id,hotel_id,room_id) VALUES (null,?, ?)";
+				 String sql1="Select booking_id  FROM book where room_id="+"'"+room_id+"'";
+				 java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
+				 int user_id=randomNumberGen();
+				  ps.setString(1,hotel_id); 
+				  ps.setString(2,room_id);
+				 
+				  if(ps.executeUpdate()!=0) {
+					  //Row inserted for booking
+					  rsObj = stmtObj.executeQuery(sql1);
+					  //retriveing booking_id
+					  while(rsObj.next()) {
+						  response=Integer.toString(rsObj.getInt("booking_id"));
+					  }
+					  
+				  }
+			}
+			catch (SQLException sqlExObj) { sqlExObj.printStackTrace(); } finally {
+				   return response; }
+		
+		}
+
+
+
+		public String setRoomFlag(String room_id,int booking_id) {
+			Calendar calendar = Calendar.getInstance();
+		    java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
+			String response="Not able to reserve"; try {
+				 String sql1 ="INSERT INTO payment(payment_id,booking_id,payment_date) VALUES (null,?, ?)";
+				 String sql ="UPDATE room SET roomAvailableFlag='No'  where room_id="+"'"+room_id+"'";
+				 String sql2="Select payment_id FROM payment where booking_id="+booking_id;
+				  java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
+				  java.sql.PreparedStatement ps1 = connectDb().prepareStatement(sql1);
+				  ps1.setInt(1,booking_id);
+				  ps1.setDate(2,ourJavaDateObject);
+				 		  if(ps.executeUpdate()!=0) {
+				 			//If payment details are successful we can insert values  for a paymentId also.
+				 			  if(ps1.executeUpdate()!=0) {
+				 				 rsObj = stmtObj.executeQuery(sql2);
+				 				 //If update has happened then send payment id as reponse to the user.
+				 				 while(rsObj.next()) {
+				 					response=Integer.toString(rsObj.getInt("payment_id"));
+				 				 }
+				 			  }else {
+				 				  response="Payment Not Done";
+				 			  }
+					   }else {
+						   response="Server Error";
+					   }
+			}
+			catch (SQLException sqlExObj) { sqlExObj.printStackTrace(); } finally {
+				   return response; }
 		}
 }

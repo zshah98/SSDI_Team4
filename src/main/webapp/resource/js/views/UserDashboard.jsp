@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
- <title>Register</title>
+ <title>Homepage</title>
 <style>
 	{
 	margin:0;
@@ -17,7 +17,7 @@ body{
 
 a, a:visited {
 	outline:none;
-	color:#389dc1;
+	color:blue;
 }
 
 a:hover{
@@ -110,7 +110,7 @@ ul li p{
 	<body  ng-app="myApp" ng-controller="SearchController">
      		<div class="bar">
 			<!-- Create a binding between the searchString model and the text field -->
-			<input type="text" ng-model="searchString" placeholder="Enter name or location or event interested." />
+			<input type="text" ng-model="searchString" placeholder="Enter name or location." />
 			</div>
 		<input type="button" name="search_button" class="btn btn-primary btn-link" ng-click="onSearch()" value="Search" />
 

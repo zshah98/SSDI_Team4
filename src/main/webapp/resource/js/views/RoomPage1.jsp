@@ -21,8 +21,8 @@
     <div class="panel-heading">
 
 
-	<h3 class="panel-title">{{Selected_hotel_name}}</h3>
-     <h2 >{{Selected_hotel_address}}</h2>
+	<h3 style="text-align:center; font-size:50px;" class="panel-title">{{Selected_hotel_name}}</h3>
+     <h2 style="text-align:center;" >{{Selected_hotel_address}}</h2>
    
     <div class="panel-body">
      <form method="post" ng-submit="showBook()">

@@ -73,4 +73,30 @@ public class MainControllerTest extends JerseyTest{
 				assertEquals("Deleted",responseDeleted);
 		
 	}
+	//Billing details Test
+	@Test
+	public void testSaveBillingDetails() throws JsonParseException, JsonMappingException, IOException {
+		Response res=mcontroller.postBillingDetails("{\"add_line1\":\"sssssssss\",\"add_line2\":\"ssssssss\",\"city\":\"Charlotte\",\"pincode\":\"28262\",\"state\":\"North Carolina\"}");
+		assertEquals(res.getStatus(),200);
+	}
+	//Payment details Test
+	@Test
+	public void testSavePaymentDetails() throws JsonParseException, JsonMappingException, IOException {
+		Response res=mcontroller.postPaymentDetails("{\"user_name\":\"harika\",\"card_no\":\"123213231322222\",\"ccv\":\"123\",\"month\":\"8\",\"year\":\"2021\"}");
+		assertEquals(res.getStatus(),200);
+	}
+	//roomDetails
+	@Test
+	public void testgetRoomDetails() {
+		Response res=mcontroller.getRoomDetailsResponse("Wynn","Kings Bed","28662 Concord Mall");
+		//Get room data only of room is available.
+		assertEquals(res.getStatus(),200);
+	}
+	//BookingDetails
+	@Test
+	public void testBookingDetails() {
+		Response res=mcontroller.getBookingDetailsResponse("1","W110");
+		//Getting details of a booked room
+		assertEquals(res.getStatus(),200);
+	}
 }

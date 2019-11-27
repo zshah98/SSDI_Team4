@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>JS Bin</title>
+  <title>BookandGo</title>
    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-1.7.2.js"></script>
   
@@ -12,11 +12,11 @@
 </head>
 <body ng-controller="invoice_controller">
 
-  <table>
-    <tbody ng-repeat="data in data">
+  <table style="text-align:center; padding:30px; margin:30px;">
+    <tbody ng-repeat="data in data" ng-model="invoicedata">
     
     <tr>
-
+		<div >
         <th> Name of hotel selected :{{hotel_name}}</th>
          <th> Hotel address  :{{hotel_address}}</th>
         </tr>
@@ -24,17 +24,19 @@
          <td>Floor Number :{{data.room_floor}}</td>
          </tr>
      <tr >
-         <td>Type of Room chosen:{{data.room_type}}</td>
+         <td>Type of Room chosen: {{data.room_type}}</td>
          </tr>
-          <tr ><td>Review room price{{data.roomPrice}}</td></tr>
-        
+          <tr ><td>Review room price {{data.roomPrice}}</td></tr>
+        </div>
          
      
   </table>
   
-  <button ng-click="showinvoice()">Show Invoice</button>
-  
+  <div style="padding:30px; margin:10px;">
+  <button ng-click="confirmBooking()" ng-disabled="confirmBook">Confirm Booking</button>
+  <button ng-click="goBack()">Go back</button>
   <br/><Br/>
+  </div>
   
    <div id="invoice" style="display:none">
            <label>Sub Total:</label>

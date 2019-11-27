@@ -4,7 +4,7 @@
 <html ng-app="app">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>BookAndGo</title>
+      <title>BookAndGo Payment</title>
       
      
       
@@ -46,7 +46,7 @@
     <form name="paymentForm" method="post" ng-submit="submitForm()" novalidate>
   
        
-    <label>Payment Details:</label>
+    <label style="font-size:20px;">Payment Details:</label>
     
     <div class="form-group">
     	<lable>Name on credit/debit card</lable>

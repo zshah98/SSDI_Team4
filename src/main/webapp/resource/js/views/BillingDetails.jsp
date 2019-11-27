@@ -4,7 +4,7 @@
 <html ng-app="app">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>BookAndGo</title>
+      <title>Billing Information</title>
       
      
       
@@ -16,6 +16,7 @@
   		background-color: lightblue;
       	.marginTop14 {
       		margin-top: 14px;
+      		padding-top:20px;
       	}
       </style>
     <!-- Javascript Files -->      
@@ -39,10 +40,23 @@
 	<div class="container">
 	<div class="col-sm-8 col-sm-offset-2">
     
-    <div class="page-header"><h2 align="center" class="text-primary">Book And Go</h2></div> 
+    
    
     <form name="billingForm" method="post" ng-submit="submitForm()" novalidate>
-    <label>Billing Details:</label>  
+    <label sytle>Billing Details:</label>  
+    
+        <div class="form-group">
+    	<label>Name:</label>
+    	<input type="text" name="name" class="form-control"  ng-minlength="1" ng-maxlength="100" required placeholder="Enter your name">
+    	
+    </div>
+    
+        <div class="form-group">
+    	<lable>Email:</lable>
+    	<input type="email" name="email" class="form-control"  ng-minlength="1" ng-maxlength="100" required placeholder="Enter your email">
+    	<p ng-show="billingForm.add_line1.$invalid && !billingForm.add_line1.$pristine" class="help-block">Address Line 1 is required.</p>
+    </div>
+    
     
     <div class="form-group">
     	<lable>Address Line 1:</lable>

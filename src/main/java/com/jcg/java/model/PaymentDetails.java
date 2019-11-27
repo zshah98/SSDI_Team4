@@ -3,6 +3,15 @@ package com.jcg.java.model;
 import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class PaymentDetails {
+	private String payment_id;
+	public String getPayment_id() {
+		return payment_id;
+	}
+
+	public void setPayment_id(String payment_id) {
+		this.payment_id = payment_id;
+	}
+
 	private String user_name;
 	private double card_no;
 	private int ccv;
@@ -13,13 +22,12 @@ public class PaymentDetails {
 		
 	}
 
-	public PaymentDetails(String user_name, double card_no, int ccv, String month, String year) {
+	public PaymentDetails(String user_name, double card_no, int ccv) {
 		super();
 		this.user_name = user_name;
 		this.card_no = card_no;
 		this.ccv = ccv;
-		this.month = month;
-		this.year = year;
+		
 	}
 
 	public String getUser_name() {

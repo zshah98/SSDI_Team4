@@ -20,9 +20,9 @@
 <div class="panel panel-default" ng-show="show_images">
     <div class="panel-heading">
 
-
-	<h3 class="panel-title">{{Selected_hotel_name}}</h3>
-     <h2 >{{Selected_hotel_address}}</h2>
+ 	
+	<h3 class="panel-title" style="text-align:center; font-size:50px;">{{Selected_hotel_name}}</h3>
+     <h2 style="text-align:center;" >{{Selected_hotel_address}}</h2>
    
     <div class="panel-body">
      <form method="post" ng-submit="showBook()">
@@ -59,7 +59,8 @@
       		</th>
       		
       		<th><input type="button" ng-model="book_selection" name="room_link6" class="btn btn-primary btn-link" ng-click="doBook(book_selection='Double Bed')" value="Book" /></th>
-      		
+      		</tr>
+      		<tr>
       		<th><img ng-src="resource/js/images/hotel3_room3.jpg" width="300" height="300" ng-model="roomData.roomid7"/><th>
       		<th>
       		  <td  width ="300" align="center">

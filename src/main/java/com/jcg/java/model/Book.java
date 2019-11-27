@@ -5,20 +5,27 @@ public class Book {
 	public int booking_id;
 	public String Room_id;
 	public String users_nameFirst;
-	public String users_nameLast;
-	public String users_email;
+	public int hotel_id;
+	
 	
 	
 	public Book() {
 	}
 
-	public Book(int booking_id, String room_id, String users_nameFirst, String users_nameLast, String users_email) {
+	public Book(int booking_id, String room_id, int hotel_id) {
 		super();
 		this.booking_id = booking_id;
 		Room_id = room_id;
-		this.users_nameFirst = users_nameFirst;
-		this.users_nameLast = users_nameLast;
-		this.users_email = users_email;
+		hotel_id=hotel_id; 
+		
+	}
+
+	public int getHotel_id() {
+		return hotel_id;
+	}
+
+	public void setHotel_id(int hotel_id) {
+		this.hotel_id = hotel_id;
 	}
 
 	public int getBooking_id() {
@@ -45,21 +52,6 @@ public class Book {
 		this.users_nameFirst = users_nameFirst;
 	}
 
-	public String getUsers_nameLast() {
-		return users_nameLast;
-	}
-
-	public void setUsers_nameLast(String users_nameLast) {
-		this.users_nameLast = users_nameLast;
-	}
-
-	public String getUsers_email() {
-		return users_email;
-	}
-
-	public void setUsers_email(String users_email) {
-		this.users_email = users_email;
-	}
 		
 
 }
