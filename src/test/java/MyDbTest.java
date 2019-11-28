@@ -96,7 +96,6 @@ public class MyDbTest extends JerseyTest {
 	 public void testRegister() {
 			user.setUsers_email("g@gmail.com");
 			int userid=randomNumberGen();
-			user.setUsers_id(userid);
 			user.setUsers_nameFirst("randomTestuser");
 			user.setUsers_password("1234");
 			String resp=mydb.saveUsersDetails(user);

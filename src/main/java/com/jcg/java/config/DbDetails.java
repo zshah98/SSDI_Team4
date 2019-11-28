@@ -19,7 +19,7 @@ public class DbDetails {
     public static final String password =  "password";
     public static final String hostname = "ssdi-project-db.cxqdrxxfwjtl.us-east-2.rds.amazonaws.com";
     public static final String port = "3306";
-    public static final String jdbcUrl = "jdbc:mysql://localhost:3306/bookandgo";
+    public static final String jdbcUrl = "jdbc:mysql://localhost:3306/ssdi_bookandgo";
 	public ResultSet getRsObj() {
 		return rsObj;
 	}

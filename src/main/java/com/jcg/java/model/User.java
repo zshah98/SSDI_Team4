@@ -4,29 +4,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class User {
-	public int users_id;
+	
 	 public String users_nameFirst;
 	 public String users_nameLast;
 	 public String users_email;
 	 public String users_type;
 	 public String users_password;
-	public int getUsers_id() {
-		return users_id;
-	}
+	
 	public User() {}
-	public User(int users_id, String users_nameFirst, String users_nameLast, String users_email, String users_type,
+	public User(String users_nameFirst, String users_nameLast, String users_email, String users_type,
 			String users_password) {
 		super();
-		this.users_id = users_id;
+		
 		this.users_nameFirst = users_nameFirst;
 		this.users_nameLast = users_nameLast;
 		this.users_email = users_email;
 		this.users_type = users_type;
 		this.users_password = users_password;
 	}
-	public void setUsers_id(int users_id) {
-		this.users_id = users_id;
-	}
+	
 	public String getUsers_nameFirst() {
 		return users_nameFirst;
 	}

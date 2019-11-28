@@ -65,7 +65,7 @@ app.controller("registerController",function($location,$scope,$http){
 	$scope.message={
 			
 	
-			users_id: '',
+			
 			users_nameFirst:'',
 			users_nameLast:'',
 			users_password:'',
@@ -102,7 +102,7 @@ app.controller("roomController",['$scope','$routeParams', '$location',function($
 	$scope.Selected_hotel_name=localStorage.getItem("Selected_hotel_name");
 	$scope.Selected_hotel_address=localStorage.getItem("Selected_hotel_address");
 	if($location.room_type!=null){
-		if($location.room_type=="Kings Bed,Double Bed"){
+		if($location.room_type=="Kings Bed,Double Bed"||$location.room_type=="Double Bed,Kings Bed"){
 			$routeParams.path('\KingsBed');
 		}else{
 			$routeParams.path('\Deluxe');

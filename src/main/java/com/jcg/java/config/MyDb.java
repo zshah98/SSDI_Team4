@@ -86,19 +86,25 @@ public class MyDb {
 	  //Method to get search Results from DB
 	public List<Hotel> getSearchDetails(String searchString) {
 		Hotel hotel = null;
+		ResultSet rsobj=null;
+		Statement st=null;
 		List<Hotel> eList = new ArrayList<Hotel>();
- 	String sql ="SELECT * FROM (SELECT * FROM hotel) t1 LEFT OUTER JOIN (SELECT * FROM event) t2 ON t1.event_id = t2.event_id WHERE t1.hotel_name='"+searchString + "'OR t2.event_name='"+searchString+"'OR t1.hotel_address='"+searchString+"'" ;
-       	try{
+ 	String sql ="SELECT GROUP_CONCAT(t2.room_type) as roomtype,t1.hotel_id,t1.hotel_name,t1.hotel_address FROM (SELECT * FROM hotel) t1 RIGHT OUTER JOIN (SELECT * FROM room) t2 ON t1.hotel_id = t2.hotel_id where t1.hotel_name="+"'"+searchString+"'"+"OR t1.hotel_address="+"'"+searchString+"' GROUP BY t1.hotel_id";
+    //String sql1="SELECT  t2.room_type FROM (SELECT * FROM hotel) t1 RIGHT OUTER JOIN (SELECT * FROM room) t2 ON t1.hotel_id = t2.hotel_id where t1.hotel_name="+"'"+searchString+"' OR t1.hotel_address="+"'"+searchString+"'"; 	
+ 	try{
        		
        		stmtObj = connectDb().prepareStatement(sql);
+       		
 		rsObj = stmtObj.executeQuery(sql);
+		
 		//Getting the hotel details from search 
+		
 while(rsObj.next()) {
-	hotel = new Hotel(rsObj.getInt("hotel_id"), rsObj.getString("hotel_name"), rsObj.getString("hotel_address"),rsObj.getString("Room_id"),rsObj.getString("Room_type"));
-	      if(rsObj.getString("event_id")!=null)
-	      { hotel.setEvent_name(rsObj.getString("event_name"));
-	        hotel.setEvent_id(rsObj.getString("event_id"));
-	        hotel.setEvent_times(rsObj.getString("event_times"));}
+	hotel = new Hotel(rsObj.getInt("hotel_id"), rsObj.getString("hotel_name"), rsObj.getString("hotel_address"));
+	      if(rsObj.getString("hotel_name")!=null)
+	      { 
+	    	     	  hotel.setRoom_type(rsObj.getString("roomtype"));
+	      }
 	eList.add(hotel);	
        	}
        	
@@ -121,15 +127,15 @@ while(rsObj.next()) {
 	public String saveUsersDetails(User user) {
 		String response="Db error"; try {
 			 
-			  String sql ="INSERT INTO users ("+"users_id,"+"users_nameFirst,"+"users_nameLast"+",users_email"+",users_type"+",users_password) VALUES (?,?,?, ?,null,?)";
+			  String sql ="INSERT INTO users ("+"user_id,"+"users_nameFirst,"+"users_nameLast"+",users_email"+",users_password) VALUES (null,?,?, ?,?)";
 		 java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
 			 int userid=randomNumberGen();
-			  ps.setInt(1,userid); 
-			  ps.setString(2,user.users_nameFirst); 
-			  ps.setString(3,user.users_nameLast);
-			  ps.setString(4,user.users_email); 
+			  //ps.setInt(1,userid); 
+			  ps.setString(1,user.users_nameFirst); 
+			  ps.setString(2,user.users_nameLast);
+			  ps.setString(3,user.users_email); 
 			  //ps.setString(5,user.users_type);
-			  ps.setString(5,user.users_password); 
+			  ps.setString(4,user.users_password); 
 			  if(ps.executeUpdate()!=0) {
 				  response="Added"; 
 			  }
@@ -200,7 +206,7 @@ while(rsObj.next()) {
 		public List<Room> getRoomDetails(String hotel_name,String room_type,String hotel_address){
 			Room room = null;
 			List<Room> eList = new ArrayList<Room>();
-			String sql="SELECT t2.hotel_id,t2.room_id,t2.room_type,t2.roomAvailableFlag,t2.roomPrice,t2.no_of_beds,t2.room_floor FROM (SELECT * FROM hotel) t1 RIGHT OUTER JOIN (SELECT * FROM room) t2 ON t1.hotel_id = t2.hotel_id WHERE t2.room_type="+"'"+room_type+"'"+" AND t2.roomAvailableFLag='Yes' AND t1.hotel_name="+"'"+hotel_name+"'"+"AND t1.hotel_address="+"'"+hotel_address+"'";
+			String sql="SELECT t2.hotel_id,t2.room_id,t2.room_type,t2.roomAvailableFlag,t2.roomPrice,t2.no_of_beds,t2.room_floor FROM (SELECT * FROM hotel) t1 RIGHT OUTER JOIN (SELECT * FROM room) t2 ON t1.hotel_id = t2.hotel_id WHERE t2.room_type="+"'"+room_type+"'"+" AND t2.roomAvailableFLag='1' AND t1.hotel_name="+"'"+hotel_name+"'"+"AND t1.hotel_address="+"'"+hotel_address+"'";
 			
 		       	try{
 		       		
@@ -265,7 +271,7 @@ while(rsObj.next()) {
 		    java.sql.Date ourJavaDateObject = new java.sql.Date(calendar.getTime().getTime());
 			String response="Not able to reserve"; try {
 				 String sql1 ="INSERT INTO payment(payment_id,booking_id,payment_date) VALUES (null,?, ?)";
-				 String sql ="UPDATE room SET roomAvailableFlag='No'  where room_id="+"'"+room_id+"'";
+				 String sql ="UPDATE room SET roomAvailableFlag='0'  where room_id="+"'"+room_id+"'";
 				 String sql2="Select payment_id FROM payment where booking_id="+booking_id;
 				  java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
 				  java.sql.PreparedStatement ps1 = connectDb().prepareStatement(sql1);
