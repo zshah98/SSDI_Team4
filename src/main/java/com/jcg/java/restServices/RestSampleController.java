@@ -1,5 +1,8 @@
 package com.jcg.java.restServices;
 
+import java.sql.SQLException;
+
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -7,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.jcg.java.config.DbDao;
 import com.jcg.java.config.MyDb;
 import com.jcg.java.model.User;
 
@@ -44,11 +48,14 @@ public class RestSampleController {
     return "<html> " + "<title>" + "Hello Jersey" + "</title>"
         + "<body><h1>" + "Hello Jersey" + "</body></h1>" + "</html> ";
   }
-  MyDb db=new MyDb();
+ @Inject
+ DbDao db;
+ 
+ 
  	@GET
  	@Path("Login/{param}/{param}")
  	@Produces(MediaType.TEXT_PLAIN)
- 	public Response getLoginResponse(@PathParam("param") String userId,@PathParam("param") String password) {
+ 	public Response getLoginResponse(@PathParam("param") String userId,@PathParam("param") String password) throws SQLException {
              User user=new User();
              user.setUsers_email(userId);
              user.setUsers_password(password);

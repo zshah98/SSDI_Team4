@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import com.jcg.java.model.BillingDetails;
 import com.jcg.java.model.Hotel;
 import com.jcg.java.model.PaymentDetails;
@@ -17,12 +19,20 @@ import com.jcg.java.model.Room;
 import com.jcg.java.model.User;
 import com.mysql.jdbc.PreparedStatement;
 
+
 public class MyDb {
 
+	
 	public static ResultSet rsObj = null;
 	public static Statement stmtObj = null;
 	public static Connection connObj = null;
-    public static DbDetails dbDetails=new DbDetails(); 
+	  public static DbDetails dbDetails;
+	   
+	public MyDb() {
+	
+	}
+	
+  
 	/***** Method #1 :: This Method Is Used To Create A Connection With The Database *****/
 	public static  Connection connectDb() {
 		
@@ -52,35 +62,7 @@ public class MyDb {
 		}		
 	}
 		//Method to get username and password searched by user
-		public String getLoginDetailsFromDb(User user){
-			String response="No user Exists";
-			String correctpwd="";
-			try {
-		   	String sql ="select *  from USERS WHERE users_email = '" + user.users_email + "' AND users_password = " + user.users_password ;
-	           	stmtObj = connectDb().prepareStatement(sql);
-				rsObj = stmtObj.executeQuery(sql);
-				
-		        if(rsObj.next()){
-		        correctpwd=rsObj.getString("users_password");
-					
-				}
-		        
-		        if(correctpwd.equalsIgnoreCase(user.users_password)) {
-		        	response="Logged in";
-		        	
-		        }else {
-		        
-		        }
-				
-			} catch (SQLException sqlExObj) {
-				sqlExObj.printStackTrace();
-			} finally {
-			//disconnectDb();
-			return response;
-			}
-			
-			
-		}
+		
 
 		  
 	  //Method to get search Results from DB
@@ -193,7 +175,7 @@ while(rsObj.next()) {
 				  ps.setString(1,dumbbill.getAdd_line1()); 
 				  ps.setString(2, dumbbill.getAdd_line2());
 				  ps.setString(3, dumbbill.getCity());
-				  ps.setInt(4, dumbbill.getPincode());
+				  ps.setString(4, dumbbill.getPincode());
 				  ps.setString(5, dumbbill.getState());
 				  if(ps.executeUpdate()!=0) {
 					  response="Added"; 
@@ -294,5 +276,56 @@ while(rsObj.next()) {
 			}
 			catch (SQLException sqlExObj) { sqlExObj.printStackTrace(); } finally {
 				   return response; }
+		}
+
+          public String test(String name) {
+        	  String response="No user Exists";
+  			
+  			try {
+  		   	String sql ="INSERT INTO Payment_details(user_id,user_name,card_no,ccv) VALUES (null,?,null,null)" ;
+  		  java.sql.PreparedStatement ps = connectDb().prepareStatement(sql);
+  				ps.setString(1,name);
+  				
+  		        if(ps.executeUpdate(sql)!=0){
+  		        response="Added";
+  					
+  				}
+  		          				
+  			} catch (SQLException sqlExObj) {
+  				sqlExObj.printStackTrace();
+  			} finally {
+  			//disconnectDb();
+  			return response;
+  			}
+  		}  
+          
+
+		
+		public String getLoginDetailsFromDb(User user) {
+			String response="No user Exists";
+			String correctpwd="";
+			try {
+		   	String sql ="select *  from USERS WHERE users_email = '" + user.users_email + "' AND users_password = " + user.users_password ;
+	           	stmtObj = connectDb().prepareStatement(sql);
+				rsObj = stmtObj.executeQuery(sql);
+				
+		        if(rsObj.next()){
+		        correctpwd=rsObj.getString("users_password");
+					
+				}
+		        
+		        if(correctpwd.equalsIgnoreCase(user.users_password)) {
+		        	response="Logged in";
+		        	
+		        }else {
+		        
+		        }
+				
+			} catch (SQLException sqlExObj) {
+				sqlExObj.printStackTrace();
+			} finally {
+			//disconnectDb();
+			return response;
+			}
 		}
 }

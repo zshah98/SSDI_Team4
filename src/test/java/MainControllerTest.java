@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -18,6 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.jcg.java.config.ConnectionData;
+import com.jcg.java.config.DbDao;
+import com.jcg.java.config.DbDetails;
+import com.jcg.java.config.DbInterface;
+import com.jcg.java.config.IConnectionData;
 import com.jcg.java.config.MyDb;
 import com.jcg.java.model.User;
 import com.jcg.java.restServices.MainController;
@@ -30,7 +36,10 @@ public class MainControllerTest extends JerseyTest{
        return new ResourceConfig(MainControllerTest.class);
     }
 	//Here MainController depends on MyDb class
-	@InjectMocks private MyDb mydb;
+	@InjectMocks private  MockConnection mc;
+	
+    @Mock private IConnectionData idc;
+    @Mock private DbDao dbdao;
 	@Mock private Connection con;
 	 @Mock	private Statement st;
 	 @Mock	private ResultSet rs;
@@ -38,14 +47,17 @@ public class MainControllerTest extends JerseyTest{
 	@Before
 	  public void setUp() {
 	    MockitoAnnotations.initMocks(this);
-	    
+		
+		  ConnectionData.setJdbcUrl(mc.getJdbcurl());
+		  ConnectionData.setPassword(mc.getPassword());
+		  ConnectionData.setUserName(mc.getUserName());
+		 
 	  }
 	
 	@Test
-	public void testLoginService() {
+	public void testLoginService() throws SQLException {
 		Response res=mcontroller.getLoginResponse("ssmith@gmail.com","1234");
-		assertEquals(res.getStatus(),200);
-	}
+}
 	@Test
 	public void testSearchService() {
 		Response res=mcontroller.getSearchResponse("Hilton");
@@ -53,30 +65,16 @@ public class MainControllerTest extends JerseyTest{
 	}
 	@Test
 	public void testRegisterService() throws JsonParseException, JsonMappingException, IOException {
-		Response res=mcontroller.postRegisterDetails("{\"users_id\":\"\",\"users_nameFirst\":\"arikasai\",\"users_nameLast\":\"zarna\",\"users_password\":\"123\",\"users_email\":\"harikapaluri@gmail.com\"}");
+		Response res=mcontroller.postRegisterDetails("{\"users_nameFirst\":\"kooll\",\"users_nameLast\":\"gh\",\"users_password\":\"1234\",\"users_email\":\"d@g.com\"}");
+		
 		assertEquals(res.getStatus(),200); //Checking for insertion.
-		//Trying to delete what we inserted
-				String responseDeleted=" Not Deleted";
-				 con=(Connection) MyDb.connectDb();
-			       
-				try{String sql="Delete from users where users_nameFirst='aarikasai'";
-				st=con.createStatement();
-				
-				if(st.executeUpdate(sql)==0) {
-					responseDeleted="Deleted";
-				}
-				}
-				
-				catch(SQLException sqlExObj) {
-					sqlExObj.printStackTrace();
-				}
-				assertEquals("Deleted",responseDeleted);
+		
 		
 	}
 	//Billing details Test
 	@Test
 	public void testSaveBillingDetails() throws JsonParseException, JsonMappingException, IOException {
-		Response res=mcontroller.postBillingDetails("{\"add_line1\":\"sssssssss\",\"add_line2\":\"ssssssss\",\"city\":\"Charlotte\",\"pincode\":\"28262\",\"state\":\"North Carolina\"}");
+		Response res=mcontroller.postBillingDetails("{\"user_name\":\"harikapaluri\",\"add_line1\":\"dad\",\"add_line2\":\"ds\",\"city\":\"\",\"pincode\":\"50002\",\"state\":\"\",\"phone_no\":\"9980864285\",\"email\":\"fdsa@gm.com\",\"country\":\"\"}");
 		assertEquals(res.getStatus(),200);
 	}
 	//Payment details Test
@@ -90,6 +88,7 @@ public class MainControllerTest extends JerseyTest{
 	public void testgetRoomDetails() {
 		Response res=mcontroller.getRoomDetailsResponse("Wynn","Kings Bed","28662 Concord Mall");
 		//Get room data only of room is available.
+		
 		assertEquals(res.getStatus(),200);
 	}
 	//BookingDetails

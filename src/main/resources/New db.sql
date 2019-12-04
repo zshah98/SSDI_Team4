@@ -53,11 +53,15 @@ values(2001, 'G1', 0, 'Kings Bed', '1','$300', 2),
 
 create table Billing_details (
 user_id int primary key auto_increment,
-add_line1 varchar(25),
-add_line2 varchar(25),
-city varchar(25),
+user_name varchar(100),
+add_line1 varchar(100),
+add_line2 varchar(100),
+city varchar(100),
 pincode int,
-state varchar(25)
+state varchar(100), 
+country varchar(100),
+phone_no varchar(100),
+email varchar(100)
 );
 
 create table Payment_details(
@@ -70,7 +74,7 @@ ccv int NOT NULL
 create table book(
 booking_id INT primary key auto_increment,
 hotel_id int(25),
-room_id int(25),
+room_id varchar(25),
 FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id)
 
 );

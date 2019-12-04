@@ -1,8 +1,12 @@
 package com.jcg.java.restServices;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.sql.DataSource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,26 +22,40 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.jcg.java.config.ConnectionData;
+import com.jcg.java.config.DbDao;
+import com.jcg.java.config.DbDetails;
+import com.jcg.java.config.DbInterface;
+import com.jcg.java.config.IConnectionData;
 import com.jcg.java.config.MyDb;
 import com.jcg.java.model.BillingDetails;
+import com.jcg.java.model.Book;
 import com.jcg.java.model.Hotel;
 import com.jcg.java.model.PaymentDetails;
 import com.jcg.java.model.Room;
 import com.jcg.java.model.User;
 
+@Singleton
 @Path("/BookAndGo")
 public class MainController {
+	
     MyDb db=new MyDb();
+   
+    ConnectionData cd=new ConnectionData();
+   	 DbInterface dbi=new DbDao(cd);
+	 
     ObjectMapper mapper = new ObjectMapper();
+    
 	//Request for login
     @GET
 	@Path("/Login/{param}/{params}")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response getLoginResponse(@PathParam("param") String userId,@PathParam("params") String password) {
+	public Response getLoginResponse(@PathParam("param") String userId,@PathParam("params") String password) throws SQLException {
+    	   
             User user=new User();
             user.setUsers_email(userId);
             user.setUsers_password(password);
-		String response=db.getLoginDetailsFromDb(user);
+		String response=dbi.getLoginDetailsFromDb(user);
         if(response.equalsIgnoreCase("Logged in"))
 		{return Response.status(200).entity(response).build();}else {
 			
@@ -51,7 +69,7 @@ public class MainController {
 			@Produces(MediaType.APPLICATION_JSON)
 			public Response getSearchResponse(@PathParam("param") String searchString) {
 		           
-				List<Hotel> response=db.getSearchDetails(searchString);
+				List<Hotel> response=dbi.getSearchDetails(searchString);
 				String json = new Gson().toJson(response);
 		        if(response!=null)
 				{return Response.status(200).entity(json).build();}else {
@@ -71,7 +89,7 @@ public class MainController {
 			  User  user = mapper.readValue(requestedJSON.toString(), User.class);
 					
 				
-				String dbresult=db.saveUsersDetails(user);
+				String dbresult=dbi.saveUsersDetails(user);
 				  if(dbresult.equalsIgnoreCase("Added")) { return
 				  Response.status(200).entity("Details Added").build();}else { return
 				  Response.status(404).entity("Db Error").build(); }
@@ -89,7 +107,7 @@ public class MainController {
 			  
 			  
 		               //user.setUsers_password(password);
-		   		String dbresult=db.savePaymentDetails(dumbpay);
+		   		String dbresult=dbi.savePaymentDetails(dumbpay);
 		           if(dbresult.equalsIgnoreCase("Added"))
 		   		{return Response.status(200).entity("Payment Details Added").build();}else {
 		   			
@@ -106,11 +124,7 @@ public class MainController {
 		   	public Response postBillingDetails(String billingDetails) throws JsonParseException, JsonMappingException, IOException {
 			  JSONObject requestedJSON = new JSONObject(billingDetails);
 			  BillingDetails dumbbill = mapper.readValue(requestedJSON.toString(), BillingDetails.class);         
-			  
-			  
-			  
-		               
-		   		String dbresult=db.saveBillingDetails(dumbbill);
+			      		String dbresult=dbi.saveBillingDetails(dumbbill);
 		           if(dbresult.equalsIgnoreCase("Added"))
 		   		{return Response.status(200).entity("Billing Details Added").build();}else {
 		   			
@@ -125,7 +139,7 @@ public class MainController {
 			@Produces(MediaType.APPLICATION_JSON)
 			public Response getRoomDetailsResponse(@PathParam("param") String hotel_name,@PathParam("roomT") String room_type,@PathParam("hotelAdd") String hotel_address) {
 		           
-				List<Room> response=db.getRoomDetails(hotel_name,room_type,hotel_address);
+				List<Room> response=dbi.getRoomDetails(hotel_name,room_type,hotel_address);
 				String json = new Gson().toJson(response);
 		        if(response!=null)
 				{return Response.status(200).entity(json).build();}else {
@@ -137,7 +151,7 @@ public class MainController {
 			@Path("/BookingDetails/{param}/{roomT}")
 		  @Produces(MediaType.TEXT_PLAIN)
 			public Response getBookingDetailsResponse(@PathParam("param") String hotel_id,@PathParam("roomT") String room_id) {
-		         String response=db.getBookingId(hotel_id,room_id);  
+		         String response=dbi.getBookingId(hotel_id,room_id);  
 				 if(response!="Db Error")
 				{return Response.status(200).entity(response).build();}else {
 					
@@ -149,11 +163,31 @@ public class MainController {
 			@Path("/SetRoomFlag/{param}/{params}")
 		  @Produces(MediaType.TEXT_PLAIN)
 			public Response setRoomFlag(@PathParam("param") String room_id,@PathParam("params") int booking_id) {
-		         String response=db.setRoomFlag(room_id,booking_id);  
+		         String response=dbi.setRoomFlag(room_id,booking_id);  
 				 if(response=="Not able to Reserve")
 				{return Response.status(404).entity(response).build();}else {
 					
 					return Response.status(200).entity(response).build();
 				}	
 		  }
+		  
+		  @GET
+		  @Path("/Cancellation/{param}")
+		  @Produces(MediaType.TEXT_PLAIN)
+		  public Response getCancelResponse(@PathParam("param") int bookId) {
+		  Book book=new Book();
+		             //Room room = new Room();
+		             book.setBooking_id(bookId);
+		             //get booking id and then make available flag=0 in book table
+		  String response=dbi.getCancelDetailsFromDb(book);
+		         if(response.equalsIgnoreCase("Cancelled"))
+		  {return Response.status(200).entity(response).build();}else {
+
+		  return Response.status(404).entity(response).build();
+		  }
+
+		  }
+
+		  
+		  	
 }

@@ -89,7 +89,7 @@
     <label>Card valid till:</label>
      <div class="form-group">
     	<lable>Month</lable>
-    	<select ng-model="paymentData.month" name="month" data-card-expiration required>
+    	<select ng-model="paymentData.month" name="month" data-card-expiration required ng-change="onMonthChange(paymentData.month)">
       <option disabled selected value="">Month</option>
       <option ng-repeat="month in months" value="{{$index+1}}" > {{$index+1}} - {{month}}</li>
     </select>
@@ -101,7 +101,7 @@
     
     <div class="form-group">
     <lable>Year</lable>
-    <select ng-model="paymentData.year" name="year" data-card-expiration required>
+    <select ng-model="paymentData.year" name="year" data-card-expiration required ng-change="onYearChange(paymentData.year)">
       <option disabled selected value="">Year</option>
        <option ng-repeat="year in years">{{year}}</option>
     </select>

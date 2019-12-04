@@ -53,6 +53,10 @@ when('/Register', {
                     		templateUrl: 'resource/js/views/RoomPage2.jsp',
                     		controller: 'roomController'
                     		}).
+                    		when('/Cancellation', {
+                        		templateUrl: 'resource/js/views/Cancellation.jsp',
+                        		controller: 'cancellation_controller'
+                        		}).
       otherwise({
 redirectTo: '/homepage'
 });
@@ -264,6 +268,7 @@ app.controller('login_register_controller', function($location,$scope, $http){
 			});
 	//Payment Controller
 app.controller("payment_controller",function($location,$scope,$http, $locale){
+	
 		$scope.paymentForm=true;	
 		$scope.message={
 				  user_name:'',
@@ -284,6 +289,28 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 	      $scope.currentMonth = new Date().getMonth() + 1
 	      $scope.months = $locale.DATETIME_FORMATS.MONTH
 	      $scope.ccinfo = {type:undefined}
+	      
+	      
+	      $scope.onMonthChange =function(month){
+	    	  //Comparing month selected and current month
+	    	  if(month<(new Date().getMonth() + 1)){
+	    		  range[0]='';
+	    	  }
+	    	  if(month>(new Date().getMonth() + 1)){
+	    		  range[0]=new Date().getFullYear();
+	    	  }
+	    	  
+	      }
+	      $scope.onYearChange =function(year){
+	    	  
+	    	  /* var randomnx=$locale.DATETIME_FORMATS.MONTH;
+	    	  if(year==new Date().getFullYear()){
+	    		  $scope.months=randomnx[11]
+	    	  }else{
+	    		  $scope.months =randomnx;
+	    	  } */
+	    	  
+	      }
 		  $scope.postData = function(){
 				 
 				
@@ -347,10 +374,13 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 	    angular.module('app', []).directive
   ( 'cardExpiration'
   , function(){
+	  
       var directive =
         { require: 'ngModel'
         , link: function(scope, elm, attrs, ctrl){
+        	
             scope.$watch('[paymentData.month,paymentData.year]',function(value){
+            	
               ctrl.$setValidity('invalid',true)
               if ( scope.paymentData.year == scope.currentYear
                    && scope.paymentData.month <= scope.currentMonth
@@ -403,13 +433,69 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 	app.controller("billing_controller",function($location,$scope,$http, $locale){
 		$scope.billingForm=true;	
 		$scope.message={
+				user_name:'',
 				   add_line1:'',
 				  add_line2:'',
 				  city:'',
 				  pincode:'',
-				  state:'' 
+				  state:'',
+				  phone_no:'',
+				  email:'',
+				  country:''
 		  };
-		
+		$scope.country = {};
+		$scope.state = {};
+		$scope.city = {};
+  	  var allCountries = [{
+  	        Id: 1,
+  	        CountryName: "USA"
+  	    }];
+  	var allStates = [{
+        Id: 1,
+        StateName: "Washington",
+        CountryId: 1
+    }, {
+        Id: 2,
+        StateName: "New York",
+        CountryId: 1
+    }, {
+        Id: 3,
+        StateName: "Queensland",
+        CountryId: 1
+    }];
+  	var allCities = [{
+        Id: 1,
+        CityName: "Washington DC",
+        StateId: 1
+    }, {
+        Id: 2,
+        CityName: "New York City",
+        StateId: 2
+    }, {
+        Id: 3,
+        CityName: "Brisbane",
+        StateId: 3
+    } ];
+  	  $scope.countries = allCountries;
+  	 /* $scope.states = allStates;
+  	 $scope.cities = allCities; */
+  	 
+  	 $scope.$watch('country', function () {
+         $scope.states = allStates.filter(function (s) {
+             return s.CountryId == $scope.country.Id;
+         });
+         $scope.city = {};
+         $scope.state = {};
+         $scope.cities = [];
+     });
+
+     $scope.$watch('state', function () {
+         $scope.cities = allCities.filter(function (c) {
+             return c.StateId == $scope.state.Id;
+         });
+         $scope.city = {};
+     });
+     $scope.billingData = angular.copy($scope.message);
 		 $scope.postData = function(){
 			 
 				
@@ -437,7 +523,7 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 	
 	
 	app.controller('invoice_controller', function($scope,$location,$http, $locale) {
-		debugger
+		
 		 var room_type=localStorage.getItem("Selected_room_type");
 		 var hotel_name=localStorage.getItem("Selected_hotel_name");
 		 var hotel_address=localStorage.getItem("Selected_hotel_address"); 
@@ -454,7 +540,7 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 		  $http.get("http://localhost:8080/BnG/rest/BookAndGo/roomDetails/"+hotel_name+"/"+room_type+"/"+hotel_address).then(
 				  
 					function successCallback(response){
-						debugger
+						
 						
 						$scope.response = response;
 						$scope.data =$scope.response.data;
@@ -488,7 +574,7 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 		  
 		  //This method is for generating a booking id.
 		  $scope.confirmBooking = function(data,data){
-			  debugger
+			 
 			  var room_id=localStorage.getItem('Selected_Room__id');
 			  var hotel_id=localStorage.getItem('Selected_hotel_id');
 			  
@@ -518,6 +604,114 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
 			  $location.path('\homepage');
 		  }
 	});
+	//Cancellation controller	  
+	  app.controller('cancellation_controller', function($location,$scope, $http){
+			
+			 $scope.closeMsg = function(){
+			  $scope.alertMsg = false;
+			 };
+			 $scope.login_form = false;
+			 $scope.cancel_form=true;
+			
+			 $scope.showCancel = function(){
+			  $scope.register_form = false;
+			  $scope.login_form = false;
+			  $scope.cancel_form=true;
+			  $scope.alertMsg = false;
+			  alert ("Ready to cancel...")
+			   
+			  
+			  $scope.showConfirm = function(event) {
+         var confirm = $scope.confirm()
+            $scope.title('Sure to delete????')
+            $scope.textContent('Delete?????')
+            $scope.targetEvent(event)
+            $scope.ok('Yes')
+            $scope.cancel('No')
+        	 $scope.submitCancel= function(){
+				 
+				var bookId=$scope.cancelData.bookid;
+				
+				$http.get("http://localhost:8080/BnG/rest/BookAndGo/Cancellation/"+bookId).then(
+					      function successCallback(response) {
+					    	$scope.response = response;
+					    	alert($scope.response.data);
+					    	console.log("Booking deleted for ID: " +bookId);
+					      },
+					      function errorCallback(response) {
+					    	 
+					    	  $scope.response = response;
+					    	  alert($scope.response.data);
+					        console.log("Unable to perform get request");
+					      }
+					    );
+			 };
+			  }} });
+	  app.controller('cancellation_controller', function($location,$scope, $http){
+			
+			 $scope.closeMsg = function(){
+			  $scope.alertMsg = false;
+			 };
+			 $scope.login_form = false;
+			 $scope.cancel_form=true;
+			
+			 $scope.showCancel = function()
+			 {
+												 
+			  $scope.register_form = false;
+			  $scope.login_form = false;
+			  $scope.cancel_form=true;
+			  $scope.alertMsg = false;
+			  
+			  			  
+			  
+			   };
+			   
+			  
+			   $scope.myFunction= function(){
+				   var bookId=$scope.cancelData.bookid;
+				  	if (confirm("Sure to Cancel for: " +bookId +"?")) 
+				  	{
+				    
+				    $scope.submitCancel= function(){
+						 
+						var bookId=$scope.cancelData.bookid;
+						
+						$http.get("http://localhost:8080/BnG/rest/BookAndGo/Cancellation/"+bookId).then(
+							      function successCallback(response) {
+							    	$scope.response = response;
+							    	alert($scope.response.data);
+							    	console.log("Booking deleted for ID: " +bookId);
+							    	$scope.cancel(bookId);
+							      },
+							      function errorCallback(response) {
+							    	 
+							    	  $scope.response = response;
+							    	  alert($scope.response.data);
+							        console.log("Unable to perform get request");
+							      }
+							    );
+						
+					 };
+					
+					
+				  	} 
+				  	 
+				  	else {
+				    
+				  }
+				
+				      
+				 };
+			   
+			   
+			   
+			  
+			 
+			
+			 
+			 });
+	
 </script>
 </head>
 <body ng-app="myApp" >
@@ -529,7 +723,7 @@ app.controller("payment_controller",function($location,$scope,$http, $locale){
     <a class="active" href="#home">Home</a>
     <a href="#/login" ng-model="LoginButton" ng-click="onLogin(Login)">Login</a>
     <a href="#/Register" ng-model="RegisterButton" ng-click="onRegister(Register)">Register</a>
-    <a href="">Cancel Booking</a>
+    <a href="#/Cancellation">Cancel Booking</a>
   </div>
 </div>
 

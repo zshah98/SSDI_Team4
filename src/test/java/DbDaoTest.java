@@ -20,7 +20,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.jcg.java.config.ConnectionData;
+import com.jcg.java.config.DbDao;
 import com.jcg.java.config.DbDetails;
+import com.jcg.java.config.DbInterface;
 import com.jcg.java.config.MyDb;
 import com.jcg.java.model.BillingDetails;
 import com.jcg.java.model.Hotel;
@@ -29,11 +32,11 @@ import com.jcg.java.model.Room;
 import com.jcg.java.model.User;
 import com.mysql.jdbc.Connection;
 
-public class MyDbTest extends JerseyTest {
+public class DbDaoTest extends JerseyTest {
 
 	@Override
     protected Application configure() {
-        return new ResourceConfig(MyDbTest.class);
+        return new ResourceConfig(DbDaoTest.class);
     }
 	//MyDb has methods which internally use user,hotel
 	@InjectMocks private User user;
@@ -41,36 +44,38 @@ public class MyDbTest extends JerseyTest {
 	 @Mock	private Statement st;
 	 @Mock	private ResultSet rs;
      
-	 MyDb mydb=new MyDb();
-	 User dummyuser;
+	 
+	 MockConnection mc=new MockConnection();
+	 
 	@Before
 	  public void setUp() {
 	    MockitoAnnotations.initMocks(this);
-	    
+		
 	  }
 	
-	
+	DbInterface dbi=new DbDao(mc);
+	 User dummyuser;
 	
 	
 	@Test
- public void testLogin() {
+ public void testLogin() throws SQLException {
 		
 		user.setUsers_password("1234");
-		user.setUsers_email("ssmith@gmail.com");
-		String resp=mydb.getLoginDetailsFromDb(user);
+		user.setUsers_email("g@gmail.com");
+		String resp=dbi.getLoginDetailsFromDb(user);
 		assertEquals("Logged in",resp);
 	}
 	@Test
-	 public void testwrongLogin() {
+	 public void testwrongLogin( ) throws SQLException {
 			
-			user.setUsers_password("123s");
+			user.setUsers_password("2314");
 			user.setUsers_email("ssmith@gmail.com");
-			String resp=mydb.getLoginDetailsFromDb(user);
+			String resp=dbi.getLoginDetailsFromDb(user);
 			assertEquals("No user Exists",resp);
 		}
 	@Test
 	 public void searchFunction() {
-			List<Hotel> l=mydb.getSearchDetails("Hilton");
+			List<Hotel> l=dbi.getSearchDetails("Hilton");
 			String response="Nothing retrieved";
 			for(Hotel h:l) {
 				if(h.getHotel_name()!=null) {
@@ -82,7 +87,7 @@ public class MyDbTest extends JerseyTest {
 		}
 	@Test
 	 public void wrongsearchFunction() {
-			List<Hotel> l=mydb.getSearchDetails("xyz");
+			List<Hotel> l=dbi.getSearchDetails("xyz");
 			String response="Nothing retrieved";
 			for(Hotel h:l) {
 				if(h.getHotel_name()!=null) {
@@ -98,28 +103,14 @@ public class MyDbTest extends JerseyTest {
 			int userid=randomNumberGen();
 			user.setUsers_nameFirst("randomTestuser");
 			user.setUsers_password("1234");
-			String resp=mydb.saveUsersDetails(user);
+			String resp=dbi.saveUsersDetails(user);
 			assertEquals(resp,"Added");
-			String responseDeleted=" Not Deleted";
-			 con=(Connection) MyDb.connectDb();
-		       
-			try{String sql="Delete from users where users_id="+userid;
-			st=con.createStatement();
 			
-			if(st.executeUpdate(sql)==0) {
-				responseDeleted="Deleted";
-			}
-			}
-			
-			catch(SQLException sqlExObj) {
-				sqlExObj.printStackTrace();
-			}
-			assertEquals("Deleted",responseDeleted);
 		}
 	@Test
 	 public void testRegisterNotWorking() {
 			//Trying to insert an empty user record.
-			String resp=mydb.saveUsersDetails(dummyuser);
+			String resp=dbi.saveUsersDetails(dummyuser);
 			assertEquals(resp,"Db error");
 			
 			
@@ -131,22 +122,22 @@ public class MyDbTest extends JerseyTest {
 	
 	@Test
 	public void savePaymentDetails() {
-		PaymentDetails pd=new PaymentDetails("harikap",123456789023456.0,567);
-		String resp=mydb.savePaymentDetails(pd);
-		assertEquals(resp,"Added");
+		PaymentDetails pd=new PaymentDetails("harikapaluri",123456789023456.0,167);
+		String resp=dbi.savePaymentDetails(pd);
 	}
-	@Test
-	public void saveBillingDetails() {
-		BillingDetails bd=new BillingDetails("add_line1", "add_line2","city",28265,"state");
-		String resp=mydb.saveBillingDetails(bd);
-		assertEquals(resp,"Added");
-	}
+
+	
+	  @Test public void saveBillingDetails() throws SQLException { 
+	BillingDetails bd=new BillingDetails("user_name"," add_line1", "String add_line2", "city","28262"," String state",
+			"String country", "String email", "String phone_no");
+	String resp=dbi.saveBillingDetails(bd); assertEquals(resp,"Added"); }
+	 
 	@Test
 	public void getRoomDetails() {
 		List<Room> roomList = new ArrayList<Room>();
 		//Since the roomFLag for this particular hotel entry  is available. query should fetch these details.
 		String roomDetailsRetrieved="False";
-		roomList=mydb.getRoomDetails("Wynn","Kings Bed","28662 Concord Mall");
+		roomList=dbi.getRoomDetails("test hotel","Double Bed","test location");
 		for(Room r:roomList) {
 			if(r.getRoom_id()!=null) {
 				roomDetailsRetrieved="True";
@@ -159,7 +150,7 @@ public class MyDbTest extends JerseyTest {
 	public void getBookingId() {
 		//In this method based on the hotel_id and room_id we need to insert it into the database and generate a booking_id as a return value.
 	    //Creating a booking entry for a room in  Marriot. 
-		String resp=mydb.getBookingId("2008","01");
+		String resp=dbi.getBookingId("2005","1");
 		//To make sure booking id is getting generated.
 		assertNotEquals(resp,"Db error");	
 }
