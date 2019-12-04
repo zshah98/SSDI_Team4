@@ -38,10 +38,7 @@ import com.jcg.java.model.User;
 @Singleton
 @Path("/BookAndGo")
 public class MainController {
-	
-    MyDb db=new MyDb();
-   
-    ConnectionData cd=new ConnectionData();
+	   ConnectionData cd=new ConnectionData();
    	 DbInterface dbi=new DbDao(cd);
 	 
     ObjectMapper mapper = new ObjectMapper();
